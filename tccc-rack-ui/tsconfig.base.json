@@ -1,0 +1,23 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@tccc-rack/model-components": ["libs/model-components/src/index.ts"],
+      "@tccc-rack/tccc-rack-models": ["libs/tccc-rack-models/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

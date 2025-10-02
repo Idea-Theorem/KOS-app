@@ -1,0 +1,115 @@
+{
+  "name": "tccc-rack-ui",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/tccc-rack-ui/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/apps/tccc-rack-ui",
+        "index": "apps/tccc-rack-ui/src/index.html",
+        "baseHref": "/",
+        "main": "apps/tccc-rack-ui/src/main.ts",
+        "tsConfig": "apps/tccc-rack-ui/tsconfig.app.json",
+        "assets": [
+          "apps/tccc-rack-ui/src/favicon.ico",
+          "apps/tccc-rack-ui/src/assets"
+        ],
+        "styles": [],
+        "scripts": [],
+        "webpackConfig": "apps/tccc-rack-ui/webpack.config.ts"
+      },
+      "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/tccc-rack-ui/src/environments/environment.ts",
+              "with": "apps/tccc-rack-ui/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "baseHref": "./"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/react:module-federation-dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "tccc-rack-ui:build",
+        "hmr": false,
+        "port": 4200
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "tccc-rack-ui:build:development"
+        },
+        "production": {
+          "buildTarget": "tccc-rack-ui:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "defaultConfiguration": "production",
+      "options": {
+        "buildTarget": "tccc-rack-ui:build",
+        "watch": false,
+        "port": 4200
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "tccc-rack-ui:build:development"
+        },
+        "production": {
+          "buildTarget": "tccc-rack-ui:build:production"
+        }
+      }
+    },
+    "kab": {
+      "command": "node tools/scripts/kabtool.mjs build tccc-rack-ui && node tools/scripts/kabtool.mjs list tccc-rack-ui ",
+      "options": {
+        "outputPath": "dist/archives/packages/tccc-rack-ui/",
+        "zipName": "ui.zip",
+        "kabName": "tccc-rack-ui.kab"
+      },
+      "dependsOn": ["zip"]
+    },
+    "zip": {
+      "command": "node tools/scripts/archiver.js tccc-rack-ui",
+      "options": {
+        "outputPath": "dist/archives/packages/tccc-rack-ui/",
+        "zipName": "ui.zip"
+      },
+      "dependsOn": ["build", "descriptor"]
+    },
+    "descriptor": {
+      "command": "node tools/scripts/descriptor.mjs tccc-rack-ui",
+      "options": {
+        "outputPath": "dist/apps/tccc-rack-ui",
+        "fileName": "descriptor.json"
+      },
+      "dependsOn": ["build"]
+    }
+  },
+  "tags": []
+}

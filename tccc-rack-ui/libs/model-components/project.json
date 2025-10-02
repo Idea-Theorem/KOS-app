@@ -1,0 +1,36 @@
+{
+  "name": "model-components",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/model-components/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "api": {
+      "command": "node tools/scripts/generate-api-types.mjs model-components",
+      "options": {
+        "host": "http://127.0.0.1:8081"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "build": {
+      "executor": "@nx/vite:build",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/libs/model-components"
+      },
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "production": {
+          "mode": "production"
+        }
+      }
+    }
+  }
+}

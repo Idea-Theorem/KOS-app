@@ -1,0 +1,27 @@
+body {
+  margin: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  background-image: url('./assets/splash-screen.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.title {
+  font-size: 72pt;
+  font-family: 'Arial Bold', Helvetica, sans-serif;
+  color: #e61d2b;
+  text-align: center;
+  padding-bottom: calc(100vh / 16);
+}

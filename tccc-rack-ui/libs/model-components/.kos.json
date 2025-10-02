@@ -1,0 +1,13 @@
+{
+  "name": "model-components-model",
+  "type": "kos.model",
+  "version": "0.1.0",
+  "models": {},
+  "generator": {
+    "defaults": {
+      "model": {
+        "folder": "models"
+      }
+    }
+  }
+}

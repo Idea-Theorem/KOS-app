@@ -1,0 +1,29 @@
+{
+  "name": "tccc-rack-models-model",
+  "type": "kos.model",
+  "version": "0.1.0",
+  "models": {
+    "rack": {
+      "name": "rack",
+      "type": "rack-model",
+      "singleton": true
+    },
+    "screen": {
+      "name": "screen",
+      "type": "screen-model",
+      "singleton": false
+    },
+    "bundle": {
+      "name": "bundle",
+      "type": "bundle-model",
+      "singleton": false
+    }
+  },
+  "generator": {
+    "defaults": {
+      "model": {
+        "folder": "models"
+      }
+    }
+  }
+}

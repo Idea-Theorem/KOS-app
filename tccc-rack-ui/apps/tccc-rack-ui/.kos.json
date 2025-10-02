@@ -1,0 +1,13 @@
+{
+  "name": "tccc-rack-ui",
+  "type": "tccc.rack.ui",
+  "version": "1.1.0",
+  "kos": {
+    "localization": {
+      "defaultLocale": "en",
+      "namespaces": {
+        "tccc-rack": {}
+      }
+    }
+  }
+}

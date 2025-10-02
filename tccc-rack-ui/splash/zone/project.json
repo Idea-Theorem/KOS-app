@@ -1,0 +1,17 @@
+{
+  "name": "zone",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "splash/zone/src",
+  "projectType": "application",
+  "targets": {
+    "splash": {
+      "command": "node tools/scripts/splashtool.mjs zone",
+      "options": {
+        "outputPath": "dist/archives/packages/zone/",
+        "layerName": "zone",
+        "startPath": "start.html"
+      }
+    }
+  },
+  "tags": []
+}

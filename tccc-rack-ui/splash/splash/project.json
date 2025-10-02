@@ -1,0 +1,17 @@
+{
+  "name": "splash",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "splash/splash/src",
+  "projectType": "application",
+  "targets": {
+    "splash": {
+      "command": "node tools/scripts/splashtool.mjs splash",
+      "options": {
+        "outputPath": "dist/archives/packages/splash/",
+        "layerName": "splash",
+        "startPath": "start.html"
+      }
+    }
+  },
+  "tags": []
+}
