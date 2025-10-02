@@ -21,7 +21,8 @@ import com.tccc.kos.core.service.app.SystemApplication;
 import com.tccc.kos.core.service.browser.BrowserService;
 import com.tccc.kos.core.service.device.DeviceService;
 import com.tccc.kos.core.service.device.serialnum.SerialNumberProvider;
-import com.tccc.kos.core.service.device.serialnum.run.RunKosSerialNumberProvider;
+// import com.tccc.kos.core.service.device.serialnum.run.RunKosSerialNumberProvider;
+import com.tccc.kos.core.service.device.serialnum.criticaldata.CriticalDataSerialNumberProvider;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -58,9 +59,33 @@ public class RackApp extends SystemApplication<RackAppConfig> {
     @Override
     public void load() throws Exception {
         // use config property for serial number provider
-        SerialNumberProvider provider = new RunKosSerialNumberProvider();
+        CriticalDataSerialNumberProvider provider = new CriticalDataSerialNumberProvider();
         addToCtx(provider);
         deviceService.setSerialNumberProvider(provider);
+
+
+        // Hook into when critical data is ready
+        log.info("00.");
+        new Thread(() -> {
+            log.info("01.");
+            while (!provider.isReady()) {
+                log.info("02.");
+                try { Thread.sleep(5000); } catch (InterruptedException ignored) {}
+            }
+            try {
+                log.info("03.");
+                String serial = provider.getSerialNumber();
+                log.info("Serial number found: {}", serial);
+            } catch (Exception e) {
+                log.warn("No serial found, initializing...");
+                try {
+                    provider.setSerialNumber("RACK-00001");
+                    log.info("Serial number initialized.");
+                } catch (Exception ex) {
+                    log.error("Failed to set serial number", ex);
+                }
+            }
+        }).start();
 
         addToCtx(new RackController());
     }
