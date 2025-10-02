@@ -33,15 +33,47 @@ export const RackViewBase: React.FunctionComponent<Props> = kosComponent(
     const videoSources = rack.videoSources;
     const imageSources = rack.imageSources;
     const regions = rack.regions;
-    const layout = rack.layout;
+    const layout = rack.layout || {
+      name: "SIM_DR_ZONE",
+      display: { width: 1280, height: 1024 },
+      screens: {
+        1: {
+          name: "main",
+          display: { width: 1280, height: 720 }, // common video height ratio
+          position: { x: 0, y: 152 } // centers vertically (1024 - 720) / 2
+        }
+      }
+    };
     const { videoRefs, ready, next } = useContent(
       rack,
       Object.values(layout?.screens ?? 2).length,
       videoSources,
       rack.maxVideoDurationSec.value
     );
-    if (!layout || !rack || Object.values(screenMap).length === 0) {
-      return null;
+
+   log.debug('No layout found, using mock layout');
+   if (!layout || !rack || Object.values(screenMap).length === 0) {
+      return (
+        <div
+          style={{
+            color: 'white',
+            padding: 12,
+            fontSize: 12,
+            maxHeight: '100vh', // limit to viewport height
+            overflowY: 'auto',  // enable vertical scroll
+            whiteSpace: 'pre-wrap', // so lines wrap nicely
+          }}
+        >
+          <strong>Rack</strong>
+          <pre>{JSON.stringify(rack, null, 2)}</pre>
+
+          <strong>Layout</strong>
+          <pre>{JSON.stringify(layout, null, 2)}</pre>
+
+          <strong>Screen Map</strong>
+          <pre>{JSON.stringify(screenMap, null, 2)}</pre>
+        </div>
+      );
     }
 
     const { display, screens } = extractLayoutData(layout);

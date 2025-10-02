@@ -20,8 +20,6 @@ import com.tccc.kos.core.manifest.ResolvedManifestSection;
 import com.tccc.kos.core.service.app.SystemApplication;
 import com.tccc.kos.core.service.browser.BrowserService;
 import com.tccc.kos.core.service.device.DeviceService;
-import com.tccc.kos.core.service.device.serialnum.SerialNumberProvider;
-// import com.tccc.kos.core.service.device.serialnum.run.RunKosSerialNumberProvider;
 import com.tccc.kos.core.service.device.serialnum.criticaldata.CriticalDataSerialNumberProvider;
 
 import lombok.Getter;
@@ -31,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * System application for Coke digital rack.
  *
- * @author David Vogt (david@kondra.com)
+ * @author 
  * @version 2025-01-06
  */
 @Slf4j
@@ -56,36 +54,38 @@ public class RackApp extends SystemApplication<RackAppConfig> {
     @Getter
     private List<Content> contentList;
 
-    @Override
-    public void load() throws Exception {
-        // use config property for serial number provider
-        CriticalDataSerialNumberProvider provider = new CriticalDataSerialNumberProvider();
-        addToCtx(provider);
-        deviceService.setSerialNumberProvider(provider);
-
-
-        // Hook into when critical data is ready
-        log.info("00.");
-        new Thread(() -> {
-            log.info("01.");
-            while (!provider.isReady()) {
-                log.info("02.");
-                try { Thread.sleep(5000); } catch (InterruptedException ignored) {}
-            }
+    /**
+     * Custom provider subclass to handle initialization once CriticalData is available
+     */
+    public static class RackSerialProvider extends CriticalDataSerialNumberProvider {
+        @Override
+        public void onCriticalDataAvailable(com.tccc.kos.core.service.criticaldata.CriticalDataService service) {
+            super.onCriticalDataAvailable(service);
+             log.warn("01");
             try {
-                log.info("03.");
-                String serial = provider.getSerialNumber();
+                log.warn("02");
+                String serial = getSerialNumber();
                 log.info("Serial number found: {}", serial);
             } catch (Exception e) {
+                log.warn("03");
                 log.warn("No serial found, initializing...");
                 try {
-                    provider.setSerialNumber("RACK-00001");
+                    log.warn("04");
+                    setSerialNumber("RACK-00001");
                     log.info("Serial number initialized.");
                 } catch (Exception ex) {
                     log.error("Failed to set serial number", ex);
                 }
             }
-        }).start();
+        }
+    }
+
+    @Override
+    public void load() throws Exception {
+        // use critical-data serial number provider
+        RackSerialProvider provider = new RackSerialProvider();
+        addToCtx(provider);
+        deviceService.setSerialNumberProvider(provider);
 
         addToCtx(new RackController());
     }

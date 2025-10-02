@@ -1,4 +1,5 @@
 com/tccc/app/rack/RackAppConfig.class
+com/tccc/app/rack/RackApp$RackSerialProvider.class
 com/tccc/app/rack/RackApp.class
 com/tccc/app/rack/RackAppConfig$LogLevel.class
 com/tccc/app/rack/RackController.class
