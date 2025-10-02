@@ -1,0 +1,88 @@
+{
+  "kos": {
+    "app": {
+      "appClass": "com.tccc.app.rack.RackApp",
+      "appId": "system",
+      "altClassesDir": "/home/david/src/tccc-rack-app/target/classes"
+    }
+  },
+  "tccc": {
+    "rack": {
+      "device": {
+        "layout": {
+          "DR_ENDCAP": {
+            "name": "DR_ENDCAP",
+            "display": {
+              "width": 1920,
+              "height": 1295
+            },
+            "screens": {
+              "1": {
+                "name": "main",
+                "display": {
+                  "width": 1920,
+                  "height": 540
+                },
+                "position": {
+                  "x": 0,
+                  "y": 0
+                }
+              },
+              "2": {
+                "name": "side",
+                "display": {
+                  "width": 1920,
+                  "height": 755
+                },
+                "position": {
+                  "x": 0,
+                  "y": 540
+                }
+              }
+            }
+          },
+          "DR_ZONE": {
+            "name": "DR_ZONE",
+            "display": {
+              "width": 1920,
+              "height": 540
+            },
+            "screens": {
+              "1": {
+                "name": "main",
+                "display": {
+                  "width": 1920,
+                  "height": 540
+                },
+                "position": {
+                  "x": 0,
+                  "y": 0
+                }
+              }
+            }
+          },
+          "DR_HYDROCAP": {
+            "name": "DR_HYDROCAP",
+            "display": {
+              "width": 1920,
+              "height": 360
+            },
+            "screens": {
+              "1": {
+                "name": "main",
+                "display": {
+                  "width": 1920,
+                  "height": 360
+                },
+                "position": {
+                  "x": 0,
+                  "y": 0
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
