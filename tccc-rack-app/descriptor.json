@@ -86,3 +86,7 @@
     }
   }
 }
+
+
+// EAch DR_ZONE, or DR_ENDCAP, or DR_HYDROCAP has its own layout, and are each RACK stations
+//So, when they upload the .kab file it will match each of the Racks. And each rack is a different RPI as well. 

@@ -33,17 +33,7 @@ export const RackViewBase: React.FunctionComponent<Props> = kosComponent(
     const videoSources = rack.videoSources;
     const imageSources = rack.imageSources;
     const regions = rack.regions;
-    const layout = rack.layout || {
-      name: "SIM_DR_ZONE",
-      display: { width: 1280, height: 1024 },
-      screens: {
-        1: {
-          name: "main",
-          display: { width: 1280, height: 720 }, // common video height ratio
-          position: { x: 0, y: 152 } // centers vertically (1024 - 720) / 2
-        }
-      }
-    };
+    const layout = rack.layout;
     const { videoRefs, ready, next } = useContent(
       rack,
       Object.values(layout?.screens ?? 2).length,
