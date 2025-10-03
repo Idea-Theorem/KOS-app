@@ -1,6 +1,9 @@
+com/tccc/app/rack/RackAppConfig$DeviceConfig.class
+com/tccc/app/rack/RackController.class
+com/tccc/app/rack/RackAppConfig$TcccConfig.class
+com/tccc/app/rack/RackApp$Content.class
 com/tccc/app/rack/RackAppConfig.class
 com/tccc/app/rack/RackApp$RackSerialProvider.class
 com/tccc/app/rack/RackApp.class
 com/tccc/app/rack/RackAppConfig$LogLevel.class
-com/tccc/app/rack/RackController.class
-com/tccc/app/rack/RackApp$Content.class
+com/tccc/app/rack/RackAppConfig$RackConfig.class

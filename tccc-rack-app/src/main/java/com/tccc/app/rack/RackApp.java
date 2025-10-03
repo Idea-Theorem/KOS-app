@@ -6,6 +6,7 @@ package com.tccc.app.rack;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.io.InputStream;
 
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.util.StringRequestContent;
@@ -138,6 +139,28 @@ public class RackApp extends SystemApplication<RackAppConfig> {
 
     @Override
     public void started() {
+    try {
+    // Locate descriptor.json inside this app section
+    KabFile self = getSection().getKabs().get(0); // get the app's KAB itself
+    InputStream descriptorStream = self.getInputStream("descriptor.json");
+    
+    if (descriptorStream != null) {
+        JsonNode root = KosUtil.getMapper().readTree(descriptorStream);
+        log.info("Loaded descriptor.json: {}", root.toPrettyString());
+        
+        JsonNode layoutNode = root.path("tccc").path("rack").path("device").path("layout");
+        if (!layoutNode.isMissingNode()) {
+            log.info("Loaded layout: {}", layoutNode.toPrettyString());
+        } else {
+            log.warn("Layout not found under tccc.rack.device.layout");
+        }
+    } else {
+        log.error("Could not find descriptor.json in app KAB");
+    }
+} catch (Exception e) {
+    log.error("Failed to load layout from descriptor.json", e);
+}
+
         // nav to the ui
         if (uiVfsSource != null) {
             browserService.goToUrl(uiVfsSource.getFullPath("index.html"));
