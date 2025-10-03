@@ -5,7 +5,6 @@ package com.tccc.app.rack;
 
 import com.tccc.kos.commons.core.service.config.annotations.ConfigDesc;
 import com.tccc.kos.core.service.app.BaseAppConfig;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -49,27 +48,4 @@ public class RackAppConfig extends BaseAppConfig {
 
     @ConfigDesc("Url to use when changing led color.")
     private String ledUrl = "http://localhost:17587/config/digitalLedStrip";
-
-    @ConfigDesc("Device layout configurations loaded from descriptor.json")
-    private JsonNode layout; // we store raw JSON for now
-
-    /**
-     * Root TCCC structure mapping
-     */
-    private TcccConfig tccc;
-
-    @Getter @Setter
-    public static class TcccConfig {
-        private RackConfig rack;
-    }
-
-    @Getter @Setter
-    public static class RackConfig {
-        private DeviceConfig device;
-    }
-
-    @Getter @Setter
-    public static class DeviceConfig {
-        private JsonNode layout;
-    }
 }

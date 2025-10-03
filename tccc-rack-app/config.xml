@@ -13,6 +13,7 @@
                <property name="backoffConfig.unitMultiplier" value="3"/>
                <property name="backoffConfig.type" value="EXPONENTIAL"/>
             </bean>
+            
          </beanGroup>
       </beanGroups>
    </configSource>

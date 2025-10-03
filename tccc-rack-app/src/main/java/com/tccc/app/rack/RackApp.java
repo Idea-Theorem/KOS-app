@@ -6,8 +6,6 @@ package com.tccc.app.rack;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.io.InputStream;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.util.StringRequestContent;
@@ -22,7 +20,8 @@ import com.tccc.kos.core.manifest.ResolvedManifestSection;
 import com.tccc.kos.core.service.app.SystemApplication;
 import com.tccc.kos.core.service.browser.BrowserService;
 import com.tccc.kos.core.service.device.DeviceService;
-import com.tccc.kos.core.service.device.serialnum.criticaldata.CriticalDataSerialNumberProvider;
+import com.tccc.kos.core.service.device.serialnum.SerialNumberProvider;
+import com.tccc.kos.core.service.device.serialnum.run.RunKosSerialNumberProvider;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -31,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * System application for Coke digital rack.
  *
- * @author 
+ * @author David Vogt (david@kondra.com)
  * @version 2025-01-06
  */
 @Slf4j
@@ -56,36 +55,10 @@ public class RackApp extends SystemApplication<RackAppConfig> {
     @Getter
     private List<Content> contentList;
 
-    /**
-     * Custom provider subclass to handle initialization once CriticalData is available
-     */
-    public static class RackSerialProvider extends CriticalDataSerialNumberProvider {
-        @Override
-        public void onCriticalDataAvailable(com.tccc.kos.core.service.criticaldata.CriticalDataService service) {
-            super.onCriticalDataAvailable(service);
-             log.warn("01");
-            try {
-                log.warn("02");
-                String serial = getSerialNumber();
-                log.info("Serial number found: {}", serial);
-            } catch (Exception e) {
-                log.warn("03");
-                log.warn("No serial found, initializing...");
-                try {
-                    log.warn("04");
-                    setSerialNumber("RACK-00001");
-                    log.info("Serial number initialized.");
-                } catch (Exception ex) {
-                    log.error("Failed to set serial number", ex);
-                }
-            }
-        }
-    }
-
     @Override
     public void load() throws Exception {
-        // use critical-data serial number provider
-        RackSerialProvider provider = new RackSerialProvider();
+        // use config property for serial number provider
+        SerialNumberProvider provider = new RunKosSerialNumberProvider();
         addToCtx(provider);
         deviceService.setSerialNumberProvider(provider);
 
@@ -140,28 +113,6 @@ public class RackApp extends SystemApplication<RackAppConfig> {
 
     @Override
     public void started() {
-    try {
-    // Locate descriptor.json inside this app section
-    KabFile self = getSection().getKabs().get(0); // get the app's KAB itself
-    InputStream descriptorStream = self.getInputStream("descriptor.json");
-    
-    if (descriptorStream != null) {
-        JsonNode root = KosUtil.getMapper().readTree(descriptorStream);
-        log.info("Loaded descriptor.json: {}", root.toPrettyString());
-        
-        JsonNode layoutNode = root.path("tccc").path("rack").path("device").path("layout");
-        if (!layoutNode.isMissingNode()) {
-            log.info("Loaded layout: {}", layoutNode.toPrettyString());
-        } else {
-            log.warn("Layout not found under tccc.rack.device.layout");
-        }
-    } else {
-        log.error("Could not find descriptor.json in app KAB");
-    }
-} catch (Exception e) {
-    log.error("Failed to load layout from descriptor.json", e);
-}
-
         // nav to the ui
         if (uiVfsSource != null) {
             browserService.goToUrl(uiVfsSource.getFullPath("index.html"));
