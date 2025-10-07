@@ -22,6 +22,7 @@ import com.tccc.kos.core.service.browser.BrowserService;
 import com.tccc.kos.core.service.device.DeviceService;
 import com.tccc.kos.core.service.device.serialnum.SerialNumberProvider;
 import com.tccc.kos.core.service.device.serialnum.run.RunKosSerialNumberProvider;
+import com.tccc.app.rack.LedMgr;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -54,6 +55,7 @@ public class RackApp extends SystemApplication<RackAppConfig> {
     private VFSSource uiVfsSource;
     @Getter
     private List<Content> contentList;
+    private LedMgr ledMgr;
 
     @Override
     public void load() throws Exception {
@@ -62,7 +64,14 @@ public class RackApp extends SystemApplication<RackAppConfig> {
         addToCtx(provider);
         deviceService.setSerialNumberProvider(provider);
 
+        // Add LedMgr to context so serial events flow
+        LedMgr ledMgr = new LedMgr();
+        addToCtx(ledMgr);
+
+        this.ledMgr = ledMgr;
+
         addToCtx(new RackController());
+    
     }
 
     @Override
@@ -86,6 +95,9 @@ public class RackApp extends SystemApplication<RackAppConfig> {
         for (ResolvedManifestSection section : getSectionsByNamePrefix(OTA_CONTENT_PREFIX)) {
             addContent(section, false);
         }
+
+        log.info("Simulating ESP32 connection...");
+        ledMgr.setLedColor(0xFF0000); // Red
     }
 
     private void addContent(ResolvedManifestSection section, boolean mfg) {
@@ -119,21 +131,35 @@ public class RackApp extends SystemApplication<RackAppConfig> {
         }
     }
 
-    /**
-     * Set the color of the led strip.
-     * @param color   the color in hex rgb format without the leading '#'
-     */
-    public void setLedColor(String color) {
-        try {
-            httpClient.newRequest(getConfig().getLedUrl())
-                .method(HttpMethod.POST)
-                .body(new StringRequestContent("application/json",
-                        KosUtil.getMapper().writeValueAsString(Map.of("colorhex", "#" + color))))
-                .send();
-        } catch(Exception ex) {
-            log.error("Failed to set rgb color to: {}", color, ex);
-        }
-   }
+  //   /**
+  //    * Set the color of the led strip.
+  //    * @param color   the color in hex rgb format without the leading '#'
+  //    */
+  //   public void setLedColor(String color) {
+  //       try {
+  //           httpClient.newRequest(getConfig().getLedUrl())
+  //               .method(HttpMethod.POST)
+  //               .body(new StringRequestContent("application/json",
+  //                       KosUtil.getMapper().writeValueAsString(Map.of("colorhex", "#" + color))))
+  //               .send();
+  //       } catch(Exception ex) {
+  //           log.error("Failed to set rgb color to: {}", color, ex);
+  //       }
+  //  }
+
+   public void setEsp32LedColor(String colorHex) {
+      try {
+          int colorInt = Integer.parseInt(colorHex, 16);
+          if (ledMgr != null) {
+              log.warn("Esp32 LED manager not initialized");
+              ledMgr.setLedColor(colorInt);
+          } else {
+              log.warn("Esp32 LED manager not initialized");
+          }
+      } catch (NumberFormatException ex) {
+          log.error("Invalid LED color hex: {}", colorHex, ex);
+      }
+    }
 
     @Getter @Setter
     public class Content {

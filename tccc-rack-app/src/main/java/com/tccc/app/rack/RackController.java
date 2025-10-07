@@ -30,9 +30,16 @@ public final class RackController {
         return app.getContentList();
     }
 
-    @ApiEndpoint(POST="/leds/{color}", desc="Set the led color to the specified rgb value.",
-            params = @Param(name="color", desc="The hex rgb color without the leading '#' character."))
-    public void setLedColor(@PathVariable("color") String color) {
-        app.setLedColor(color);
+    // Old LED endpoint that called a web service
+    // @ApiEndpoint(POST="/leds/{color}", desc="Set the led color to the specified rgb value.",
+    //         params = @Param(name="color", desc="The hex rgb color without the leading '#' character."))
+    // public void setLedColor(@PathVariable("color") String color) {
+    //     app.setLedColor(color);
+    // }
+
+    @ApiEndpoint(POST="/leds/{color}", desc="Set LED color via ESP32 over USB",
+        params = @Param(name="color", desc="Hex rgb (no leading '#')"))
+    public void setEsp32LedColor(@PathVariable("color") String color) {
+        app.setEsp32LedColor(color);
     }
 }
