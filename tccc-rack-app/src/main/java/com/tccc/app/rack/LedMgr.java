@@ -15,29 +15,33 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LedMgr extends SerialAdapterFactory implements UdevDeviceOwner {
     private SerialDevice serial;   // esp32 serial connection
-    private int color;             // the current color for the leds
+    private String color;             // the current color for the leds
 
     /**
      * Set the led color
      */
-    public void setLedColor(int color) {
+    public void setLedColor(String color) {
         log.warn("We are inside manager");
+        log.warn("LED color hex: {}", color);
         // remember the new color
         this.color = color;
 
         // if we're connected to the esp32, send the color
         if (serial != null) {
             // send the color information to the esp32
-            log.info("Setting leds to color : {}", color);
+            log.warn("Setting leds to color : {}", color);
             try {
             // Example protocol: send “COLOR RRGGBB\n”
-            String hex = String.format("%06X", color & 0xFFFFFF);
-            String cmd = "COLOR " + hex + "\n";
+            // String hex = String.format("%06X", color & 0xFFFFFF);
+            String cmd =  color + "\n";
             byte[] buf = cmd.getBytes(StandardCharsets.UTF_8);
             serial.write(buf);
+            log.warn("If we got here, that should be fine : {}", buf);
             } catch(Exception ex) {
                 log.warn("Failed to set led color: {}", color);
             }
+        } else {
+            log.warn("Not connected to esp32, but cannot set led color");
         }
     }
 
@@ -46,9 +50,9 @@ public class LedMgr extends SerialAdapterFactory implements UdevDeviceOwner {
       log.warn("LedMgr.matchDevice called: VID={} PID={} path={}", 
         device.getVendorId(), device.getProductId(), device.getDevicePath());
         // check for the vid/pid of the esp32
-        if ((device.getVendorId() == 0x10C4) && (device.getProductId() == 0xEA60)) {
+        if ((device.getVendorId() == 6790) && (device.getProductId() == 21971)) {
             // claim the serial device so we own it and get notified when it's disconnected
-            log.info("Connecting to esp32");
+            log.warn("Connecting to esp32");
             device.claimDevice(this);
 
             try {

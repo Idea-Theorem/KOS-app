@@ -96,8 +96,6 @@ public class RackApp extends SystemApplication<RackAppConfig> {
             addContent(section, false);
         }
 
-        log.info("Simulating ESP32 connection...");
-        ledMgr.setLedColor(0xFF0000); // Red
     }
 
     private void addContent(ResolvedManifestSection section, boolean mfg) {
@@ -148,11 +146,12 @@ public class RackApp extends SystemApplication<RackAppConfig> {
   //  }
 
    public void setEsp32LedColor(String colorHex) {
+    log.warn("LED color hex: {}", colorHex);
       try {
-          int colorInt = Integer.parseInt(colorHex, 16);
+          // int colorInt = Integer.parseInt(colorHex, 16);
           if (ledMgr != null) {
-              log.warn("Esp32 LED manager not initialized");
-              ledMgr.setLedColor(colorInt);
+              log.warn("Esp32 Initialized");
+              ledMgr.setLedColor(colorHex);
           } else {
               log.warn("Esp32 LED manager not initialized");
           }
